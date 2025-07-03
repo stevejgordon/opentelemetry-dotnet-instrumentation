@@ -16,8 +16,8 @@ internal static class SqlClientConstants
     public const string ExecuteReaderAsyncMethodName = "ExecuteReaderAsync";
     public const string CommandBehaviorTypeName = "System.Data.CommandBehavior";
     public const string CancellationTokenTypeName = "System.Threading.CancellationToken";
-    public const string SystemDataMinimumVersion = "4.6.0";
-    public const string SystemDataMaximumVersion = "99.0.0";
+    public const string SystemDataMinimumVersion = "4.0.0";
+    public const string SystemDataMaximumVersion = "4.*.*";
     public const string ActivitySourceName = "OpenTelemetry.AutoInstrumentation.SystemDataSqlClient";
     public const string DatabaseSystem = "mssql";
 }
