@@ -288,6 +288,17 @@ internal static class PackageVersionDefinitions
                 new("1.8.2"), // 1.8.0-1.8.1 are known to have issues with arm64
                 new("*")
             }
+        },
+        new()
+        {
+            IntegrationName = "SystemDataSqlClient",
+            NugetPackageName = "System.Data",
+            TestApplicationName = "TODO",
+            Versions = new List<PackageVersion>
+            {
+                new("4.0.0", supportedTargetFrameworks: ["net462"], supportedExecutionFrameworks: ["net462"]),
+                new("*", supportedTargetFrameworks: ["net462"], supportedExecutionFrameworks: ["net462"])
+            }
         }
     };
 

@@ -17,7 +17,7 @@ internal static partial class InstrumentationDefinitions
 {
     private static NativeCallTargetDefinition[] GetDefinitionsArray()
     {
-        var nativeCallTargetDefinitions = new List<NativeCallTargetDefinition>(35);
+        var nativeCallTargetDefinitions = new List<NativeCallTargetDefinition>(39);
         // Traces
         var tracerSettings = Instrumentation.TracerSettings.Value;
         if (tracerSettings.TracesEnabled)
@@ -72,6 +72,15 @@ internal static partial class InstrumentationDefinitions
             {
                 nativeCallTargetDefinitions.Add(new("RabbitMQ.Client", "RabbitMQ.Client.Impl.ModelBase", "BasicGet", ["RabbitMQ.Client.BasicGetResult", "System.String", "System.Boolean"], 6, 0, 0, 6, 65535, 65535, AssemblyFullName, "OpenTelemetry.AutoInstrumentation.Instrumentations.RabbitMq6.Integrations.ModelBaseBasicGetIntegration"));
                 nativeCallTargetDefinitions.Add(new("RabbitMQ.Client", "RabbitMQ.Client.Framing.Impl.Model", "_Private_BasicPublish", ["System.Void", "System.String", "System.String", "System.Boolean", "RabbitMQ.Client.IBasicProperties", "System.ReadOnlyMemory`1[System.Byte]"], 6, 0, 0, 6, 65535, 65535, AssemblyFullName, "OpenTelemetry.AutoInstrumentation.Instrumentations.RabbitMq6.Integrations.ModelBasicPublishIntegration"));
+            }
+
+            // SystemDataSqlClient
+            if (tracerSettings.EnabledInstrumentations.Contains(TracerInstrumentation.SystemDataSqlClient))
+            {
+                nativeCallTargetDefinitions.Add(new("System.Data", "System.Data.SqlClient.SqlCommand", "ExecuteReader", ["System.Data.SqlClient.SqlDataReader"], 4, 6, 0, 99, 0, 0, AssemblyFullName, "OpenTelemetry.AutoInstrumentation.Instrumentations.SystemDataSqlClient.Integrations.SqlCommandExecuteReader"));
+                nativeCallTargetDefinitions.Add(new("System.Data", "System.Data.SqlClient.SqlCommand", "ExecuteReader", ["System.Data.SqlClient.SqlDataReader", "System.Data.CommandBehavior"], 4, 6, 0, 99, 0, 0, AssemblyFullName, "OpenTelemetry.AutoInstrumentation.Instrumentations.SystemDataSqlClient.Integrations.SqlCommandExecuteReader"));
+                nativeCallTargetDefinitions.Add(new("System.Data", "System.Data.SqlClient.SqlCommand", "ExecuteReaderAsync", ["System.Threading.Tasks.Task`1[!0]", "System.Data.CommandBehavior"], 4, 6, 0, 99, 0, 0, AssemblyFullName, "OpenTelemetry.AutoInstrumentation.Instrumentations.SystemDataSqlClient.Integrations.SqlCommandExecuteReaderAsync"));
+                nativeCallTargetDefinitions.Add(new("System.Data", "System.Data.SqlClient.SqlCommand", "ExecuteReaderAsync", ["System.Threading.Tasks.Task`1[!0]", "System.Data.CommandBehavior", "System.Threading.CancellationToken"], 4, 6, 0, 99, 0, 0, AssemblyFullName, "OpenTelemetry.AutoInstrumentation.Instrumentations.SystemDataSqlClient.Integrations.SqlCommandExecuteReaderAsync"));
             }
 
             // WcfClient

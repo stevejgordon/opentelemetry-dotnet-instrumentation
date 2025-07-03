@@ -132,5 +132,12 @@ internal enum TracerInstrumentation
     /// <summary>
     /// RabbitMQ client instrumentation
     /// </summary>
-    RabbitMq = 22
+    RabbitMq = 22,
+
+#if NETFRAMEWORK
+    /// <summary>
+    /// System.Data.SqlClient instrumentation
+    /// </summary>
+    SystemDataSqlClient = 23,
+#endif
 }

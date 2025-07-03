@@ -1,0 +1,2 @@
+OpenTelemetry.AutoInstrumentation.Instrumentations.SystemDataSqlClient.Integrations.SqlCommandExecuteReaderAsync
+OpenTelemetry.AutoInstrumentation.Instrumentations.SystemDataSqlClient.Integrations.SqlCommandExecuteReader

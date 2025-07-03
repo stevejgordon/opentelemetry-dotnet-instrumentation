@@ -353,15 +353,14 @@ internal static class Instrumentation
                     break;
                 case TracerInstrumentation.WcfService:
                     break;
+                case TracerInstrumentation.SystemDataSqlClient:
+                    break;
 #endif
                 case TracerInstrumentation.HttpClient:
                     DelayedInitialization.Traces.AddHttpClient(lazyInstrumentationLoader, pluginManager, tracerSettings);
                     break;
                 case TracerInstrumentation.GrpcNetClient:
                     DelayedInitialization.Traces.AddGrpcClient(lazyInstrumentationLoader, pluginManager, tracerSettings);
-                    break;
-                case TracerInstrumentation.SqlClient:
-                    DelayedInitialization.Traces.AddSqlClient(lazyInstrumentationLoader, pluginManager, tracerSettings);
                     break;
                 case TracerInstrumentation.Quartz:
                     DelayedInitialization.Traces.AddQuartz(lazyInstrumentationLoader, pluginManager);
@@ -383,6 +382,9 @@ internal static class Instrumentation
                     break;
                 case TracerInstrumentation.GraphQL:
                     DelayedInitialization.Traces.AddGraphQL(LazyInstrumentationLoader, pluginManager, tracerSettings);
+                    break;
+                case TracerInstrumentation.SqlClient:
+                    DelayedInitialization.Traces.AddSqlClient(lazyInstrumentationLoader, pluginManager, tracerSettings);
                     break;
 #endif
                 case TracerInstrumentation.Azure:

@@ -26,11 +26,11 @@ internal static class EnvironmentConfigurationTracerHelper
 #if NETFRAMEWORK
                 TracerInstrumentation.AspNet => Wrappers.AddAspNetInstrumentation(builder, pluginManager, lazyInstrumentationLoader, settings),
                 TracerInstrumentation.WcfService => AddWcfIfNeeded(builder, ref wcfInstrumentationAdded),
+                TracerInstrumentation.SystemDataSqlClient => builder.AddSource("OpenTelemetry.Instrumentation.SystemDataSqlClient"),
 #endif
                 TracerInstrumentation.GrpcNetClient => Wrappers.AddGrpcClientInstrumentation(builder, pluginManager, lazyInstrumentationLoader, settings),
                 TracerInstrumentation.HttpClient => Wrappers.AddHttpClientInstrumentation(builder, pluginManager, lazyInstrumentationLoader, settings),
                 TracerInstrumentation.Npgsql => builder.AddSource("Npgsql"),
-                TracerInstrumentation.SqlClient => Wrappers.AddSqlClientInstrumentation(builder, pluginManager, lazyInstrumentationLoader, settings),
                 TracerInstrumentation.NServiceBus => builder.AddSource("NServiceBus.Core"),
                 TracerInstrumentation.Elasticsearch => builder.AddSource("Elastic.Clients.Elasticsearch.ElasticsearchClient"),
                 TracerInstrumentation.ElasticTransport => builder.AddSource("Elastic.Transport"),
@@ -41,6 +41,7 @@ internal static class EnvironmentConfigurationTracerHelper
                 TracerInstrumentation.OracleMda => Wrappers.AddOracleMdaInstrumentation(builder, lazyInstrumentationLoader, settings),
                 TracerInstrumentation.RabbitMq => builder.AddSource("RabbitMQ.Client.Publisher").AddSource("RabbitMQ.Client.Subscriber"),
 #if NET
+                TracerInstrumentation.SqlClient => Wrappers.AddSqlClientInstrumentation(builder, pluginManager, lazyInstrumentationLoader, settings),
                 TracerInstrumentation.AspNetCore => Wrappers.AddAspNetCoreInstrumentation(builder, pluginManager, lazyInstrumentationLoader, settings),
                 TracerInstrumentation.MassTransit => builder.AddSource("MassTransit"),
                 TracerInstrumentation.MySqlData => builder.AddSource("connector-net"),
