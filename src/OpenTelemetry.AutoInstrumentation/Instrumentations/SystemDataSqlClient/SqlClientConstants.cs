@@ -13,6 +13,8 @@ internal static class SqlClientConstants
     public const string SystemDataSqlCommandTypeName = "System.Data.SqlClient.SqlCommand";
     public const string SqlDataReaderTypeName = "System.Data.SqlClient.SqlDataReader";
     public const string ExecuteReaderMethodName = "ExecuteReader";
+    public const string ExecuteNonQueryMethodName = "ExecuteNonQuery";
+    public const string ExecuteScalarMethodName = "ExecuteScalar";
     public const string ExecuteReaderAsyncMethodName = "ExecuteReaderAsync";
     public const string CommandBehaviorTypeName = "System.Data.CommandBehavior";
     public const string CancellationTokenTypeName = "System.Threading.CancellationToken";

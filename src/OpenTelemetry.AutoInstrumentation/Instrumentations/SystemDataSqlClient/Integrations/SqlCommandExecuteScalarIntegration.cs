@@ -3,26 +3,25 @@
 
 #if NETFRAMEWORK
 using System.Data;
-using System.Diagnostics;
 using OpenTelemetry.AutoInstrumentation.CallTarget;
 
 namespace OpenTelemetry.AutoInstrumentation.Instrumentations.SystemDataSqlClient.Integrations;
 
 /// <summary>
-/// SqlCommand ExecuteReaderAsync integration
+/// SqlCommand ExecuteScalar integration
 /// </summary>
-// System.Data (.NET Framework) - ExecuteReaderAsync(CommandBehavior)
+// System.Data (.NET Framework) - ExecuteScalar()
 [InstrumentMethod(
     assemblyName: SqlClientConstants.SystemDataAssemblyName,
     typeName: SqlClientConstants.SystemDataSqlCommandTypeName,
-    methodName: SqlClientConstants.ExecuteReaderAsyncMethodName,
-    returnTypeName: ClrNames.GenericTaskWithGenericClassParameter,
-    parameterTypeNames: [SqlClientConstants.CommandBehaviorTypeName],
+    methodName: SqlClientConstants.ExecuteScalarMethodName,
+    returnTypeName: "System.Object",
+    parameterTypeNames: [],
     minimumVersion: SqlClientConstants.SystemDataMinimumVersion,
     maximumVersion: SqlClientConstants.SystemDataMaximumVersion,
     integrationName: SqlClientConstants.SystemDataSqlClientByteCodeIntegrationName,
     type: InstrumentationType.Trace)]
-public static class SqlCommandExecuteReaderAsync
+public static class SqlCommandExecuteScalarIntegration
 {
     /// <summary>
     /// OnMethodBegin callback
@@ -33,7 +32,7 @@ public static class SqlCommandExecuteReaderAsync
     internal static CallTargetState OnMethodBegin<TTarget>(TTarget instance)
         where TTarget : notnull
     {
-        AutoInstrumentationEventSource.Log.Information("---> OnMethodBegin");
+        AutoInstrumentationEventSource.Log.Information("---> SqlCommandExecuteScalarIntegration.OnMethodBegin");
         AutoInstrumentationEventSource.Log.Information($"Instance is {instance.GetType().AssemblyQualifiedName}");
 
         var command = (IDbCommand)instance;
@@ -43,7 +42,7 @@ public static class SqlCommandExecuteReaderAsync
             AutoInstrumentationEventSource.Log.Information($"{command.Connection.Database}");
         }
 
-        var activity = SqlClientInstrumentation.StartDatabaseActivity(command, "ExecuteReader");
+        var activity = SqlClientInstrumentation.StartDatabaseActivity(command, "ExecuteScalar");
 
         if (activity is null)
         {
@@ -54,34 +53,32 @@ public static class SqlCommandExecuteReaderAsync
     }
 
     /// <summary>
-    /// OnAsyncMethodEnd callback
+    /// OnMethodEnd callback
     /// </summary>
     /// <typeparam name="TTarget">Type of the target</typeparam>
-    /// <typeparam name="TReturn">Type of the return value, in an async scenario will be T of Task of T</typeparam>
+    /// <typeparam name="TReturn">Type of the return value</typeparam>
     /// <param name="instance">Instance value, aka `this` of the instrumented method.</param>
     /// <param name="returnValue">Return value</param>
     /// <param name="exception">Exception instance in case the original code threw an exception.</param>
     /// <param name="state">Calltarget state value</param>
     /// <returns>A response value, in an async scenario will be T of Task of T</returns>
-    internal static async Task<TReturn> OnAsyncMethodEnd<TTarget, TReturn>(TTarget instance, TReturn returnValue, Exception? exception, CallTargetState state)
+    internal static CallTargetReturn<TReturn> OnMethodEnd<TTarget, TReturn>(TTarget instance, TReturn returnValue, Exception? exception, in CallTargetState state)
     {
-        var activity = state.State as Activity;
+        AutoInstrumentationEventSource.Log.Information("---> SqlCommandExecuteScalarIntegration.OnMethodEnd");
+        AutoInstrumentationEventSource.Log.Information(state.ToString());
 
-        try
+        var activity = state.Activity;
+
+        // TODO db.response.returned_rows?
+
+        if (activity is null)
         {
-            if (returnValue is Task task)
-            {
-                await task.ConfigureAwait(false);
-            }
-        }
-        catch (Exception asyncException)
-        {
-            SqlClientInstrumentation.StopDatabaseActivity(activity, asyncException);
-            throw;
+            AutoInstrumentationEventSource.Log.Information("activity is null");
+            return new CallTargetReturn<TReturn>(returnValue);
         }
 
         SqlClientInstrumentation.StopDatabaseActivity(activity, exception);
-        return returnValue;
+        return new CallTargetReturn<TReturn>(returnValue);
     }
 }
 #endif

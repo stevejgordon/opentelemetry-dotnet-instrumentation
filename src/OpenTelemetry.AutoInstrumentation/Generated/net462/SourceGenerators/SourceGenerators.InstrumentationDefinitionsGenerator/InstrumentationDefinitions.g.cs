@@ -17,7 +17,7 @@ internal static partial class InstrumentationDefinitions
 {
     private static NativeCallTargetDefinition[] GetDefinitionsArray()
     {
-        var nativeCallTargetDefinitions = new List<NativeCallTargetDefinition>(38);
+        var nativeCallTargetDefinitions = new List<NativeCallTargetDefinition>(39);
         // Traces
         var tracerSettings = Instrumentation.TracerSettings.Value;
         if (tracerSettings.TracesEnabled)
@@ -77,9 +77,10 @@ internal static partial class InstrumentationDefinitions
             // SystemDataSqlClient
             if (tracerSettings.EnabledInstrumentations.Contains(TracerInstrumentation.SystemDataSqlClient))
             {
+                nativeCallTargetDefinitions.Add(new("System.Data", "System.Data.SqlClient.SqlCommand", "ExecuteNonQuery", ["System.Int32"], 4, 0, 0, 4, 65535, 65535, AssemblyFullName, "OpenTelemetry.AutoInstrumentation.Instrumentations.SystemDataSqlClient.Integrations.SqlCommandExecuteNonQueryIntegration"));
                 nativeCallTargetDefinitions.Add(new("System.Data", "System.Data.SqlClient.SqlCommand", "ExecuteReader", ["System.Data.SqlClient.SqlDataReader"], 4, 0, 0, 4, 65535, 65535, AssemblyFullName, "OpenTelemetry.AutoInstrumentation.Instrumentations.SystemDataSqlClient.Integrations.SqlCommandExecuteReader"));
                 nativeCallTargetDefinitions.Add(new("System.Data", "System.Data.SqlClient.SqlCommand", "ExecuteReaderAsync", ["System.Threading.Tasks.Task`1[!0]", "System.Data.CommandBehavior"], 4, 0, 0, 4, 65535, 65535, AssemblyFullName, "OpenTelemetry.AutoInstrumentation.Instrumentations.SystemDataSqlClient.Integrations.SqlCommandExecuteReaderAsync"));
-                nativeCallTargetDefinitions.Add(new("System.Data", "System.Data.SqlClient.SqlCommand", "ExecuteReaderAsync", ["System.Threading.Tasks.Task`1[!0]", "System.Data.CommandBehavior", "System.Threading.CancellationToken"], 4, 0, 0, 4, 65535, 65535, AssemblyFullName, "OpenTelemetry.AutoInstrumentation.Instrumentations.SystemDataSqlClient.Integrations.SqlCommandExecuteReaderAsync"));
+                nativeCallTargetDefinitions.Add(new("System.Data", "System.Data.SqlClient.SqlCommand", "ExecuteScalar", ["System.Object"], 4, 0, 0, 4, 65535, 65535, AssemblyFullName, "OpenTelemetry.AutoInstrumentation.Instrumentations.SystemDataSqlClient.Integrations.SqlCommandExecuteScalarIntegration"));
             }
 
             // WcfClient
