@@ -24,8 +24,11 @@ internal static class SqlClientInstrumentation
     {
         if (sqlCommand == null)
         {
+            AutoInstrumentationEventSource.Log.Information("sqlCommand null");
             return null;
         }
+
+        AutoInstrumentationEventSource.Log.Information("sqlCommand not null");
 
         // Check if source instrumentation is already handling this operation
         // to prevent duplicate spans from bytecode and source instrumentation
@@ -38,17 +41,24 @@ internal static class SqlClientInstrumentation
 
         if (!sqlCommand.TryDuckCast<ISqlCommand>(out var command))
         {
+            AutoInstrumentationEventSource.Log.Information("command is not ISqlCommand");
             return null;
         }
+
+        AutoInstrumentationEventSource.Log.Information("command is ISqlCommand");
 
         var commandText = command.CommandText ?? string.Empty;
         var operationName = ExtractOperationName(commandText) ?? operationType;
 
+        AutoInstrumentationEventSource.Log.Information($"commandText = {commandText}");
+        AutoInstrumentationEventSource.Log.Information($"commandText = {operationName}");
+
         // TODO - Apply semantic conventions for database spans
 
-        var activity = ActivitySource.StartActivity($"{operationName} {ExtractDatabaseName(command)}");
+        var activity = ActivitySource.StartActivity($"{operationName} ");
         if (activity == null)
         {
+            AutoInstrumentationEventSource.Log.Information("activity is null");
             return null;
         }
 
@@ -62,26 +72,6 @@ internal static class SqlClientInstrumentation
 
         activity.SetTag("db.operation.name", operationName);
 
-        // Extract connection information
-        if (command.Connection?.TryDuckCast<ISqlConnection>(out var connection) == true)
-        {
-            if (!string.IsNullOrEmpty(connection.Database))
-            {
-                activity.SetTag("db.namespace", connection.Database);
-            }
-
-            if (!string.IsNullOrEmpty(connection.DataSource))
-            {
-                var serverInfo = ParseServerInfo(connection.DataSource!);
-                activity.SetTag("server.address", serverInfo.Address);
-
-                if (serverInfo.Port.HasValue)
-                {
-                    activity.SetTag("server.port", serverInfo.Port.Value);
-                }
-            }
-        }
-
         return activity;
     }
 
@@ -89,6 +79,7 @@ internal static class SqlClientInstrumentation
     {
         if (activity == null)
         {
+            AutoInstrumentationEventSource.Log.Information("activity is null");
             return;
         }
 
@@ -115,16 +106,6 @@ internal static class SqlClientInstrumentation
 
         var match = SqlOperationRegex.Match(commandText);
         return match.Success ? match.Groups[1].Value.ToUpperInvariant() : null;
-    }
-
-    private static string ExtractDatabaseName(ISqlCommand command)
-    {
-        if (command.Connection?.TryDuckCast<ISqlConnection>(out var connection) == true)
-        {
-            return connection.Database ?? "unknown";
-        }
-
-        return "unknown";
     }
 
     private static (string Address, int? Port) ParseServerInfo(string dataSource)

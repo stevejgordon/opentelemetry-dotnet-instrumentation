@@ -26,7 +26,7 @@ internal static class EnvironmentConfigurationTracerHelper
 #if NETFRAMEWORK
                 TracerInstrumentation.AspNet => Wrappers.AddAspNetInstrumentation(builder, pluginManager, lazyInstrumentationLoader, settings),
                 TracerInstrumentation.WcfService => AddWcfIfNeeded(builder, ref wcfInstrumentationAdded),
-                TracerInstrumentation.SystemDataSqlClient => builder.AddSource("OpenTelemetry.Instrumentation.SystemDataSqlClient"),
+                TracerInstrumentation.SystemDataSqlClient => builder.AddSource("OpenTelemetry.AutoInstrumentation.SystemDataSqlClient"),
 #endif
                 TracerInstrumentation.GrpcNetClient => Wrappers.AddGrpcClientInstrumentation(builder, pluginManager, lazyInstrumentationLoader, settings),
                 TracerInstrumentation.HttpClient => Wrappers.AddHttpClientInstrumentation(builder, pluginManager, lazyInstrumentationLoader, settings),

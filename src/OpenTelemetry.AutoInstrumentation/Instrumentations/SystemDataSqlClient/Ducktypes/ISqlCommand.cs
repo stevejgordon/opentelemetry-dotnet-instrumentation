@@ -8,15 +8,15 @@ namespace OpenTelemetry.AutoInstrumentation.Instrumentations.SystemDataSqlClient
 /// <summary>
 /// Duck typing interface for SqlCommand
 /// </summary>
-internal interface ISqlCommand : IDuckType
+internal interface ISqlCommand
 {
     /// <summary>
     /// Gets the text command to run against the data source
     /// </summary>
-    string? CommandText { get; }
+    string CommandText { get; }
 
-    /// <summary>
-    /// Gets the SqlConnection used by this instance of the SqlCommand
-    /// </summary>
-    object? Connection { get; }
+    ///// <summary>
+    ///// Gets or sets the connection to the data source
+    ///// </summary>
+    // ISqlConnection Connection { get; set; }
 }

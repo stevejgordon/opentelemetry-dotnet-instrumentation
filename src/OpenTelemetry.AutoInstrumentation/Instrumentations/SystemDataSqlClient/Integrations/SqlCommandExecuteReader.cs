@@ -4,6 +4,8 @@
 #if NETFRAMEWORK
 using System.Diagnostics;
 using OpenTelemetry.AutoInstrumentation.CallTarget;
+using OpenTelemetry.AutoInstrumentation.Instrumentations.SystemDataSqlClient.DuckTypes;
+using OpenTelemetry.AutoInstrumentation.Util;
 
 namespace OpenTelemetry.AutoInstrumentation.Instrumentations.SystemDataSqlClient.Integrations;
 
@@ -32,6 +34,17 @@ namespace OpenTelemetry.AutoInstrumentation.Instrumentations.SystemDataSqlClient
     maximumVersion: SqlClientConstants.SystemDataMaximumVersion,
     integrationName: SqlClientConstants.SystemDataSqlClientByteCodeIntegrationName,
     type: InstrumentationType.Trace)]
+// System.Data (.NET Framework) - ExecuteReader(CommandBehavior)
+[InstrumentMethod(
+    assemblyName: SqlClientConstants.SystemDataAssemblyName,
+    typeName: SqlClientConstants.SystemDataSqlCommandTypeName,
+    methodName: SqlClientConstants.ExecuteReaderMethodName,
+    returnTypeName: SqlClientConstants.SqlDataReaderTypeName,
+    parameterTypeNames: [SqlClientConstants.CommandBehaviorTypeName, "System.String"],
+    minimumVersion: SqlClientConstants.SystemDataMinimumVersion,
+    maximumVersion: SqlClientConstants.SystemDataMaximumVersion,
+    integrationName: SqlClientConstants.SystemDataSqlClientByteCodeIntegrationName,
+    type: InstrumentationType.Trace)]
 public static class SqlCommandExecuteReader
 {
     /// <summary>
@@ -39,12 +52,21 @@ public static class SqlCommandExecuteReader
     /// </summary>
     /// <typeparam name="TTarget">Type of the target</typeparam>
     /// <param name="instance">Instance value, aka `this` of the instrumented method.</param>
+    /// <param name="command">A</param>
+    /// <param name="thing">A a</param>
     /// <returns>Calltarget state value</returns>
-    internal static CallTargetState OnMethodBegin<TTarget>(TTarget instance)
-        where TTarget : notnull
+    internal static CallTargetState OnMethodBegin<TTarget>(TTarget instance, object command, string thing)
     {
+        AutoInstrumentationEventSource.Log.Information("ZZZZ TEST");
+
         var activity = SqlClientInstrumentation.StartDatabaseActivity(instance, "ExecuteReader");
-        return new CallTargetState(activity, null);
+
+        if (activity is null)
+        {
+            AutoInstrumentationEventSource.Log.Information("activity is null");
+        }
+
+        return activity is not null ? new CallTargetState(activity) : CallTargetState.GetDefault();
     }
 
     /// <summary>
@@ -58,9 +80,18 @@ public static class SqlCommandExecuteReader
     /// <param name="state">Calltarget state value</param>
     /// <returns>A response value, in an async scenario will be T of Task of T</returns>
     internal static CallTargetReturn<TReturn> OnMethodEnd<TTarget, TReturn>(TTarget instance, TReturn returnValue, Exception? exception, in CallTargetState state)
-        where TTarget : notnull
     {
-        var activity = state.State as Activity;
+        AutoInstrumentationEventSource.Log.Information("ZZZZ END TEST");
+        AutoInstrumentationEventSource.Log.Information(state.ToString());
+
+        var activity = state.Activity;
+
+        if (activity is null)
+        {
+            AutoInstrumentationEventSource.Log.Information("activity is null");
+            return new CallTargetReturn<TReturn>(returnValue);
+        }
+
         SqlClientInstrumentation.StopDatabaseActivity(activity, exception);
         return new CallTargetReturn<TReturn>(returnValue);
     }
