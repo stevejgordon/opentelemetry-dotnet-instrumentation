@@ -2,10 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #if NETFRAMEWORK
-using System.Diagnostics;
+using System.Data;
 using OpenTelemetry.AutoInstrumentation.CallTarget;
-using OpenTelemetry.AutoInstrumentation.Instrumentations.SystemDataSqlClient.DuckTypes;
-using OpenTelemetry.AutoInstrumentation.Util;
 
 namespace OpenTelemetry.AutoInstrumentation.Instrumentations.SystemDataSqlClient.Integrations;
 
@@ -32,10 +30,19 @@ public static class SqlCommandExecuteReader
     /// <param name="instance">Instance value, aka `this` of the instrumented method.</param>
     /// <returns>Calltarget state value</returns>
     internal static CallTargetState OnMethodBegin<TTarget>(TTarget instance)
+        where TTarget : notnull
     {
-        AutoInstrumentationEventSource.Log.Information("ZZZZ TEST");
+        AutoInstrumentationEventSource.Log.Information("---> OnMethodBegin");
+        AutoInstrumentationEventSource.Log.Information($"Instance is {instance.GetType().AssemblyQualifiedName}");
 
-        var activity = SqlClientInstrumentation.StartDatabaseActivity(instance, "ExecuteReader");
+        var command = (IDbCommand)instance;
+
+        if (command is not null)
+        {
+            AutoInstrumentationEventSource.Log.Information($"{command.Connection.Database}");
+        }
+
+        var activity = SqlClientInstrumentation.StartDatabaseActivity(command, "ExecuteReader");
 
         if (activity is null)
         {
@@ -57,10 +64,12 @@ public static class SqlCommandExecuteReader
     /// <returns>A response value, in an async scenario will be T of Task of T</returns>
     internal static CallTargetReturn<TReturn> OnMethodEnd<TTarget, TReturn>(TTarget instance, TReturn returnValue, Exception? exception, in CallTargetState state)
     {
-        AutoInstrumentationEventSource.Log.Information("ZZZZ END TEST");
+        AutoInstrumentationEventSource.Log.Information("---> OnMethodEnd");
         AutoInstrumentationEventSource.Log.Information(state.ToString());
 
         var activity = state.Activity;
+
+        // TODO db.response.returned_rows?
 
         if (activity is null)
         {

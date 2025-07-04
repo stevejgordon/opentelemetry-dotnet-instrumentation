@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #if NETFRAMEWORK
+using System.Data;
 using System.Diagnostics;
 using OpenTelemetry.AutoInstrumentation.CallTarget;
 
@@ -43,8 +44,24 @@ public static class SqlCommandExecuteReaderAsync
     internal static CallTargetState OnMethodBegin<TTarget>(TTarget instance)
         where TTarget : notnull
     {
-        var activity = SqlClientInstrumentation.StartDatabaseActivity(instance, "ExecuteReaderAsync");
-        return new CallTargetState(activity, null);
+        AutoInstrumentationEventSource.Log.Information("---> OnMethodBegin");
+        AutoInstrumentationEventSource.Log.Information($"Instance is {instance.GetType().AssemblyQualifiedName}");
+
+        var command = (IDbCommand)instance;
+
+        if (command is not null)
+        {
+            AutoInstrumentationEventSource.Log.Information($"{command.Connection.Database}");
+        }
+
+        var activity = SqlClientInstrumentation.StartDatabaseActivity(command, "ExecuteReader");
+
+        if (activity is null)
+        {
+            AutoInstrumentationEventSource.Log.Information("activity is null");
+        }
+
+        return activity is not null ? new CallTargetState(activity) : CallTargetState.GetDefault();
     }
 
     /// <summary>

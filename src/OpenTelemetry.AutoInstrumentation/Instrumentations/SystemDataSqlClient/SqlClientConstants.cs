@@ -19,5 +19,5 @@ internal static class SqlClientConstants
     public const string SystemDataMinimumVersion = "4.0.0";
     public const string SystemDataMaximumVersion = "4.*.*";
     public const string ActivitySourceName = "OpenTelemetry.AutoInstrumentation.SystemDataSqlClient";
-    public const string DatabaseSystem = "mssql";
+    public const string DatabaseSystem = "microsoft.sql_server";
 }
