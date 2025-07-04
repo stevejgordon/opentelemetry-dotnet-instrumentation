@@ -1,8 +1,6 @@
 // Copyright The OpenTelemetry Authors
 // SPDX-License-Identifier: Apache-2.0
 
-using OpenTelemetry.AutoInstrumentation.DuckTyping;
-
 namespace OpenTelemetry.AutoInstrumentation.Instrumentations.SystemDataSqlClient.DuckTypes;
 
 /// <summary>
@@ -15,8 +13,8 @@ internal interface ISqlCommand
     /// </summary>
     string CommandText { get; }
 
-    ///// <summary>
-    ///// Gets or sets the connection to the data source
-    ///// </summary>
-    // ISqlConnection Connection { get; set; }
+    /// <summary>
+    /// Gets or sets the connection to the data source
+    /// </summary>
+    ISqlConnection Connection { get; set; }
 }

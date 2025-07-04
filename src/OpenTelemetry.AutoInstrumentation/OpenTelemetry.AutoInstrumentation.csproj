@@ -49,6 +49,7 @@
     <Reference Include="System.ServiceModel" ExcludeAssets="all" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Data" />
     <PackageReference Include="OpenTelemetry.Instrumentation.AspNet" />
   </ItemGroup>
 

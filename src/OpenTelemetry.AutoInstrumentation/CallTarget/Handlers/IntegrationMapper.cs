@@ -62,11 +62,11 @@ internal class IntegrationMapper
         ParameterInfo[] onMethodBeginParameters = onMethodBeginMethodInfo.GetParameters();
         if (onMethodBeginParameters.Length < argumentsTypes.Length)
         {
-            ThrowHelper.ThrowArgumentException($"The method: {BeginMethodName} with {onMethodBeginParameters.Length} parameters in type: {integrationType.FullName} has less parameters than required.");
+            ThrowHelper.ThrowArgumentException($"The method: {BeginMethodName} with {onMethodBeginParameters.Length} parameters in type: {integrationType.FullName} has less parameters than the {argumentsTypes.Length} required.");
         }
         else if (onMethodBeginParameters.Length > argumentsTypes.Length + 1)
         {
-            ThrowHelper.ThrowArgumentException($"The method: {BeginMethodName} with {onMethodBeginParameters.Length} parameters in type: {integrationType.FullName} has more parameters than required.");
+            ThrowHelper.ThrowArgumentException($"The method: {BeginMethodName} with {onMethodBeginParameters.Length} parameters in type: {integrationType.FullName} has more parameters than the {argumentsTypes.Length} required.");
         }
         else if (onMethodBeginParameters.Length != argumentsTypes.Length && onMethodBeginParameters[0].ParameterType != genericArgumentsTypes[0])
         {

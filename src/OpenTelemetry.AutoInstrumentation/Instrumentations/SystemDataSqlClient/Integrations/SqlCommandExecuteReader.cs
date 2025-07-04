@@ -23,28 +23,6 @@ namespace OpenTelemetry.AutoInstrumentation.Instrumentations.SystemDataSqlClient
     maximumVersion: SqlClientConstants.SystemDataMaximumVersion,
     integrationName: SqlClientConstants.SystemDataSqlClientByteCodeIntegrationName,
     type: InstrumentationType.Trace)]
-// System.Data (.NET Framework) - ExecuteReader(CommandBehavior)
-[InstrumentMethod(
-    assemblyName: SqlClientConstants.SystemDataAssemblyName,
-    typeName: SqlClientConstants.SystemDataSqlCommandTypeName,
-    methodName: SqlClientConstants.ExecuteReaderMethodName,
-    returnTypeName: SqlClientConstants.SqlDataReaderTypeName,
-    parameterTypeNames: [SqlClientConstants.CommandBehaviorTypeName],
-    minimumVersion: SqlClientConstants.SystemDataMinimumVersion,
-    maximumVersion: SqlClientConstants.SystemDataMaximumVersion,
-    integrationName: SqlClientConstants.SystemDataSqlClientByteCodeIntegrationName,
-    type: InstrumentationType.Trace)]
-// System.Data (.NET Framework) - ExecuteReader(CommandBehavior)
-[InstrumentMethod(
-    assemblyName: SqlClientConstants.SystemDataAssemblyName,
-    typeName: SqlClientConstants.SystemDataSqlCommandTypeName,
-    methodName: SqlClientConstants.ExecuteReaderMethodName,
-    returnTypeName: SqlClientConstants.SqlDataReaderTypeName,
-    parameterTypeNames: [SqlClientConstants.CommandBehaviorTypeName, "System.String"],
-    minimumVersion: SqlClientConstants.SystemDataMinimumVersion,
-    maximumVersion: SqlClientConstants.SystemDataMaximumVersion,
-    integrationName: SqlClientConstants.SystemDataSqlClientByteCodeIntegrationName,
-    type: InstrumentationType.Trace)]
 public static class SqlCommandExecuteReader
 {
     /// <summary>
@@ -52,10 +30,8 @@ public static class SqlCommandExecuteReader
     /// </summary>
     /// <typeparam name="TTarget">Type of the target</typeparam>
     /// <param name="instance">Instance value, aka `this` of the instrumented method.</param>
-    /// <param name="command">A</param>
-    /// <param name="thing">A a</param>
     /// <returns>Calltarget state value</returns>
-    internal static CallTargetState OnMethodBegin<TTarget>(TTarget instance, object command, string thing)
+    internal static CallTargetState OnMethodBegin<TTarget>(TTarget instance)
     {
         AutoInstrumentationEventSource.Log.Information("ZZZZ TEST");
 
